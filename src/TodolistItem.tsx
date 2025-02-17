@@ -1,21 +1,31 @@
-import {FilterPropsType, TasksPropsType} from "./App.tsx";
-import {Button} from "./Button.tsx";
+import {FilterPropsType, TasksPropsType} from './App.tsx';
+import {Button} from './Button.tsx';
+import {useRef} from 'react';
 
 type TodolistItemPropsType = {
     title: string
     tasks: TasksPropsType[]
     date?: string
-    deleteTask: (taskId: number) => void
+    deleteTask: (taskId: string) => void
     changeFilter: (filterValue: FilterPropsType) => void
+    createTask: (title: string) => void
 }
 
-export const TodolistItem = ({title, tasks, date, deleteTask, changeFilter}: TodolistItemPropsType) => {
+export const TodolistItem = ({title, tasks, date, deleteTask, changeFilter, createTask}: TodolistItemPropsType) => {
+
+    const inputRef = useRef<HTMLInputElement>(null);
+
     return (
         <div>
             <h3>{title}</h3>
             <div>
-                <input/>
-                <button>+</button>
+                <input ref={inputRef}/>
+                <Button title={'+'} onClick={() => {
+                    if (inputRef.current) {
+                        createTask(inputRef.current.value)
+                        inputRef.current.value = ""
+                    }
+                }}/>
             </div>
             <ul>
                 {tasks.length === 0 ? <p>Тасок нет</p> :
@@ -23,9 +33,9 @@ export const TodolistItem = ({title, tasks, date, deleteTask, changeFilter}: Tod
                         return (
                             <li key={task.id}>
                                 <input type="checkbox" checked={task.isDone}/> <span>{task.title}</span>
-                                <Button title={"x"} onClick={() => deleteTask(task.id)}/>
+                                <Button title={'x'} onClick={() => deleteTask(task.id)}/>
                             </li>
-                        )
+                        );
                     })}
             </ul>
             <div>
@@ -34,5 +44,5 @@ export const TodolistItem = ({title, tasks, date, deleteTask, changeFilter}: Tod
                 <Button title="Active" onClick={() => changeFilter('active')}/>
             </div>
             <div>{date}</div>
-        </div>)
-}
+        </div>);
+};

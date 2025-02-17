@@ -1,11 +1,12 @@
 import './App.css'
 import {TodolistItem} from "./TodolistItem.tsx";
 import {useState} from "react";
+import {v1} from 'uuid';
 
 export type FilterPropsType = 'all' | 'active' |'completed'
 
 export type TasksPropsType = {
-    id: number,
+    id: string,
     title: string,
     isDone: boolean
 }
@@ -16,12 +17,12 @@ export const App = () => {
 
     const [tasks, setTasks] = useState<TasksPropsType[]>(
         [
-            {id: 1, title: 'HTML&CSS', isDone: true},
-            {id: 2, title: 'JS', isDone: true},
-            {id: 3, title: 'ReactJS', isDone: false},
-            {id: 4, title: 'Redux', isDone: false},
-            {id: 5, title: 'Typescript', isDone: false},
-            {id: 6, title: 'RTK query', isDone: true}
+            {id: v1(), title: 'HTML&CSS', isDone: true},
+            {id: v1(), title: 'JS', isDone: true},
+            {id: v1(), title: 'ReactJS', isDone: false},
+            {id: v1(), title: 'Redux', isDone: false},
+            {id: v1(), title: 'Typescript', isDone: false},
+            {id: v1(), title: 'RTK query', isDone: true}
         ]
     )
 
@@ -38,7 +39,12 @@ export const App = () => {
         setFilter(filterValue)
     }
 
-    const deleteTask = (taskId: number) => {
+    const createTask = (title: string) => {
+        const newTask = {id: v1(), title: title, isDone: false}
+        setTasks([newTask, ...tasks])
+    }
+
+    const deleteTask = (taskId: string) => {
         const filterTasks = tasks.filter((task) => {
             return task.id !== taskId
         })
@@ -51,7 +57,8 @@ export const App = () => {
                           tasks={filtredTasked}
                           date="15/02/2025"
                           deleteTask={deleteTask}
-                          changeFilter={changeFilter}/>
+                          changeFilter={changeFilter}
+                          createTask={createTask}/>
         </div>
     )
 }
